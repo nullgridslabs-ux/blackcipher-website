@@ -196,10 +196,26 @@
                     OPERATION <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400">BLACK CIPHER</span>
                 </h2>
                 
-                <p class="text-xl text-slate-400 max-w-lg mb-10">
+                <p class="text-xl text-slate-400 max-w-lg mb-8">
                     India's premier student-led AI-augmented cyber operations championship.<br>
                     Beyond flags. Real operational warfare simulation.
                 </p>
+
+                <!-- 36 Hour Timer -->
+                <div class="flex gap-4 mb-10" id="countdown-timer">
+                    <div class="bg-zinc-900/80 border border-cyan-400/50 backdrop-blur-md rounded-2xl p-4 min-w-[90px] text-center shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                        <div class="text-3xl font-mono font-bold text-white" id="timer-hours">36</div>
+                        <div class="text-xs text-cyan-400 tracking-widest mt-1">HOURS</div>
+                    </div>
+                    <div class="bg-zinc-900/80 border border-cyan-400/50 backdrop-blur-md rounded-2xl p-4 min-w-[90px] text-center shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                        <div class="text-3xl font-mono font-bold text-white" id="timer-minutes">00</div>
+                        <div class="text-xs text-cyan-400 tracking-widest mt-1">MINS</div>
+                    </div>
+                    <div class="bg-zinc-900/80 border border-cyan-400/50 backdrop-blur-md rounded-2xl p-4 min-w-[90px] text-center shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                        <div class="text-3xl font-mono font-bold text-white" id="timer-seconds">00</div>
+                        <div class="text-xs text-cyan-400 tracking-widest mt-1">SECS</div>
+                    </div>
+                </div>
                 
                 <div class="flex flex-wrap gap-4">
                     <button onclick="document.getElementById('register').scrollIntoView({ behavior: 'smooth' })" 
@@ -335,7 +351,7 @@
                     <h3 class="heading-font text-5xl font-semibold mb-6 relative z-10">Cyber Warfare Simulation</h3>
                     <div class="space-y-5 text-slate-300 text-lg">
                         <div class="flex items-start gap-x-4"><i class="fa-solid fa-server text-red-400 mt-1"></i><span>Attack-defense cyber warfare simulation</span></div>
-                        <div class="flex items-start gap-x-4"><i class="fa-solid fa-shield-halved text-red-400 mt-1"></i><span>15  live vulnerable services to attack and defend</span></div>
+                        <div class="flex items-start gap-x-4"><i class="fa-solid fa-shield-halved text-red-400 mt-1"></i><span>8 live vulnerable services to attack and defend</span></div>
                         <div class="flex items-start gap-x-4"><i class="fa-solid fa-flag text-red-400 mt-1"></i><span>120 flags available for capture</span></div>
                         <div class="flex items-start gap-x-4"><i class="fa-solid fa-crown text-red-400 mt-1"></i><span>King of the Hill style operational scoring</span></div>
                         <div class="flex items-start gap-x-4"><i class="fa-solid fa-trophy text-red-400 mt-1"></i><span>1st Attack-Defense championship in Tamil Nadu</span></div>
@@ -394,7 +410,7 @@
                 <div class="mt-12 grid grid-cols-2 gap-8 relative z-10">
                     <div class="border border-emerald-400/30 bg-emerald-400/5 rounded-2xl p-6 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(52,211,153,0.2)] transition-all duration-300">
                         <div class="text-xs text-emerald-400 font-medium tracking-widest">REGISTRATION FEE</div>
-                        <div class="text-5xl font-mono font-semibold mt-2 mb-1 text-white">₹249</div>
+                        <div class="text-5xl font-mono font-semibold mt-2 mb-1 text-white">₹149</div>
                         <div class="text-sm text-emerald-400/70 mt-1">Per Person</div>
                     </div>
                     <div class="border border-slate-700 bg-slate-800/50 rounded-2xl p-6 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(148,163,184,0.1)] hover:border-slate-500 transition-all duration-300">
@@ -537,7 +553,42 @@
 
         window.onload = () => {
             renderDivisions();
+            startCountdown();
         };
+
+        function startCountdown() {
+            // Check if there's a saved target time in localStorage, if not set it to 36 hours from now
+            let targetTime = localStorage.getItem('blackCipherTargetTime');
+            if (!targetTime) {
+                targetTime = new Date().getTime() + (36 * 60 * 60 * 1000);
+                localStorage.setItem('blackCipherTargetTime', targetTime);
+            }
+
+            const timerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetTime - now;
+
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById("timer-hours").innerText = "00";
+                    document.getElementById("timer-minutes").innerText = "00";
+                    document.getElementById("timer-seconds").innerText = "00";
+                    return;
+                }
+
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24 * 100)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                const elHours = document.getElementById("timer-hours");
+                const elMins = document.getElementById("timer-minutes");
+                const elSecs = document.getElementById("timer-seconds");
+
+                if (elHours) elHours.innerText = hours.toString().padStart(2, '0');
+                if (elMins) elMins.innerText = minutes.toString().padStart(2, '0');
+                if (elSecs) elSecs.innerText = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
     </script>
 </body>
 </html>
